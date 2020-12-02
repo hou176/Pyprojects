@@ -3,7 +3,9 @@ import numpy as np
 pd.set_option('display.max_columns',None)
 from sklearn.feature_extraction.text import CountVectorizer
 import jieba # 导入关键字提取库
-
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+import jieba.analyse
 
 # python 包
 
@@ -108,15 +110,21 @@ def groupdata(data, columns_l,x):
         df_only = data[data[x] == i]
         # 添加ｄｉｃｔ数据ｊｉｏｎ
         for j in columns_l[0]:
-
-            dict_columns[j] = df_only.loc[:, [j]][j].values[0]
+            if j == '0'  :
+                dict_columns[j] = df_only.loc[:, [j]][j].values[0]
                 # 添加ｄｉｃｔ数据ｓｕｍ
         for k in columns_l[1]:
-            value = df_only[k].sum()
-            dict_columns[k] = value
+            if k == '0':
+                value = df_only[k].sum()
+                dict_columns[k] = value
         for l in columns_l[2]:
-            value = df_only[l].mean()
-            dict_columns[l] = value
+            if l == '0' :
+                value = df_only[l].mean()
+                dict_columns[l] = value
+        for m in columns_l[3]:
+            if m == '0':
+                value = df_only[m].count()
+                dict_columns[m] = value
 
         df = df.append(pd.DataFrame([dict_columns]), ignore_index=True)
     return df
@@ -133,3 +141,16 @@ def quantileplt(a):
     max_ = a.quantile(1)
     list_ ={'min':min_,'q0':q0,'q1':q1,'q2':q2,'q3':q3,'q4':q4,'max':max_}
     return list_
+
+
+
+def dataframe_text(df,a):
+    data_name_ = df.loc[:, a]
+    list_name = list(data_name_)
+    text_list = jiebe(list_name)
+    stopwords = pd.read_csv('清理文档.txt', index_col=False, sep='\t', names=['h'], encoding='gbk')
+    stopwords_ = list(stopwords['h'])
+    text_list = clean_list(text_list, stopwords_)
+    content = ','.join(text_list)
+
+    return  content
