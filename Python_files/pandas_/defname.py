@@ -143,14 +143,15 @@ def quantileplt(a):
     return list_
 
 
+#input( dataframe  and  columns)
+# return (list)
 
 def dataframe_text(df,a):
     data_name_ = df.loc[:, a]
     list_name = list(data_name_)
     text_list = jiebe(list_name)
-    stopwords = pd.read_csv('清理文档.txt', index_col=False, sep='\t', names=['h'], encoding='gbk')
+    stopwords = pd.read_csv('清理文档.txt', index_col=False, sep='\t', names=['h'], encoding='utf8')
     stopwords_ = list(stopwords['h'])
     text_list = clean_list(text_list, stopwords_)
     content = ','.join(text_list)
-
-    return  content
+    return  [text_list,content]
